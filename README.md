@@ -32,6 +32,29 @@ powershell -ExecutionPolicy Bypass -File .\repair-codex-windows-tools.ps1
 
 Reopen Codex Desktop and wait for bundled plugins to rebuild. Then test Browser, Chrome extension, and Computer Use again.
 
+## Automatic Repair After Codex Updates
+
+If the tools break after every Codex Desktop update, install the auto-repair task:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-auto-repair-task.ps1
+```
+
+The installer copies the scripts to `%USERPROFILE%\.codex\windows-tools-repair` and registers a current-user startup entry named `CodexWindowsToolsAutoRepair`.
+
+The task runs at user logon. It:
+
+- Always makes sure `js_repl = true`.
+- Checks the installed `OpenAI.Codex` Windows app version.
+- Runs the cache repair only when the Codex app version changes.
+- Skips cache repair if Codex is currently running, so it does not disrupt an active session.
+
+To remove the task:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\uninstall-auto-repair-task.ps1
+```
+
 ## Optional Chrome Native Messaging Check
 
 If the Chrome extension still fails, verify the native messaging host:
@@ -47,4 +70,3 @@ The registry value should point to the manifest path.
 ## Notes
 
 This is an unofficial community script. It is not affiliated with OpenAI.
-
