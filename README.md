@@ -42,12 +42,14 @@ powershell -ExecutionPolicy Bypass -File .\install-auto-repair-task.ps1
 
 The installer copies the scripts to `%USERPROFILE%\.codex\windows-tools-repair` and registers a current-user startup entry named `CodexWindowsToolsAutoRepair`.
 
-The task runs at user logon. It:
+The startup entry launches a hidden background watcher at user logon. The watcher checks about once per minute. It:
 
 - Always makes sure `js_repl = true`.
 - Checks the installed `OpenAI.Codex` Windows app version.
 - Runs the cache repair only when the Codex app version changes.
 - Skips cache repair if Codex is currently running, so it does not disrupt an active session.
+
+In practice: after clicking the Codex update button, close Codex if it does not close itself. The watcher will notice the new Codex version and repair the tool caches automatically once Codex is not running. Then reopen Codex.
 
 To remove the task:
 

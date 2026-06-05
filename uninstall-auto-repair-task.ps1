@@ -9,3 +9,10 @@ if ((Get-ItemProperty -Path $runKey -Name $startupName -ErrorAction SilentlyCont
 } else {
   Write-Output "Startup entry not found: $startupName"
 }
+
+Get-CimInstance Win32_Process |
+  Where-Object { $_.CommandLine -like "*watch-codex-windows-tools.ps1*" } |
+  ForEach-Object {
+    Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue
+    Write-Output "Stopped watcher process: $($_.ProcessId)"
+  }
